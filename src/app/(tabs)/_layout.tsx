@@ -1,6 +1,6 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 
+import { TabIcon } from '@/components/tab-icon';
 import { Loader } from '@/components/ui/feedback';
 import { Screen } from '@/components/ui/screen';
 import { useAppSelector } from '@/store/hooks';
@@ -39,39 +39,21 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'My SIPs',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons
-              name={focused ? 'wallet' : 'wallet-outline'}
-              size={size ?? 22}
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="sips" color={color} />,
         }}
       />
       <Tabs.Screen
         name="completed"
         options={{
           title: 'Completed',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons
-              name={focused ? 'checkmark-done-circle' : 'checkmark-done-circle-outline'}
-              size={size ?? 22}
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="completed" color={color} />,
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color, focused, size }) => (
-            <Ionicons
-              name={focused ? 'person' : 'person-outline'}
-              size={size ?? 22}
-              color={color}
-            />
-          ),
+          tabBarIcon: ({ color }) => <TabIcon name="profile" color={color} />,
         }}
       />
     </Tabs>
