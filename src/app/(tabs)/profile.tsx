@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { Badge } from '@/components/ui/badge';
 import { AppButton } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
 import { EmptyState } from '@/components/ui/feedback';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { logoutUser } from '@/store/slices/authSlice';
@@ -44,32 +45,34 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <Card style={styles.card}>
-        <View style={styles.header}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{initials || '?'}</Text>
-          </View>
-          <View style={styles.headerInfo}>
-            <Text style={styles.name}>
-              {user.firstName} {user.lastName}
-            </Text>
-            <Text style={styles.email}>{user.email}</Text>
-            <View style={styles.badges}>
-              <Badge label={user.role} tone="indigo" />
-              <Badge label={user.status} tone={statusTone} />
+      <Container style={styles.inner}>
+        <Card style={styles.card}>
+          <View style={styles.header}>
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{initials || '?'}</Text>
+            </View>
+            <View style={styles.headerInfo}>
+              <Text style={styles.name}>
+                {user.firstName} {user.lastName}
+              </Text>
+              <Text style={styles.email}>{user.email}</Text>
+              <View style={styles.badges}>
+                <Badge label={user.role} tone="indigo" />
+                <Badge label={user.status} tone={statusTone} />
+              </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.divider} />
+          <View style={styles.divider} />
 
-        <ProfileField label="First name" value={user.firstName} />
-        <ProfileField label="Last name" value={user.lastName} />
-        <ProfileField label="Email" value={user.email} />
-        <ProfileField label="Phone" value={user.phone} />
-      </Card>
+          <ProfileField label="First name" value={user.firstName} />
+          <ProfileField label="Last name" value={user.lastName} />
+          <ProfileField label="Email" value={user.email} />
+          <ProfileField label="Phone" value={user.phone} />
+        </Card>
 
-      <AppButton title="Logout" variant="danger" onPress={onLogout} />
+        <AppButton title="Logout" variant="danger" onPress={onLogout} />
+      </Container>
     </View>
   );
 }
@@ -79,6 +82,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: palette.bg,
     padding: spacing.lg,
+  },
+  inner: {
     gap: spacing.lg,
   },
   card: {

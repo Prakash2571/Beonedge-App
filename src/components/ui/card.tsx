@@ -7,7 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { palette, radius, spacing } from '@/theme/theme';
+import { palette, radius, shadow, spacing } from '@/theme/theme';
 
 interface CardProps {
   children: ReactNode;
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
     borderColor: palette.border,
     borderRadius: radius.lg,
     padding: spacing.lg,
+    ...shadow.card,
   },
   pressed: {
     opacity: 0.85,

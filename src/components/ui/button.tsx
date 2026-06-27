@@ -7,7 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { fontSize, palette, radius, spacing } from '@/theme/theme';
+import { fontSize, palette, radius, shadow, spacing } from '@/theme/theme';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'outline' | 'ghost';
 
@@ -45,6 +45,14 @@ export function AppButton({
   style,
 }: AppButtonProps) {
   const isDisabled = disabled || loading;
+  const isFilled =
+    variant === 'primary' || variant === 'secondary' || variant === 'danger';
+  const glowColor =
+    variant === 'secondary'
+      ? palette.pink
+      : variant === 'danger'
+        ? palette.red
+        : palette.indigo;
 
   return (
     <Pressable
@@ -54,6 +62,7 @@ export function AppButton({
         styles.base,
         { backgroundColor: backgrounds[variant] },
         variant === 'outline' && styles.outline,
+        isFilled && !isDisabled && shadow.glow(glowColor),
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
         style,
@@ -71,12 +80,12 @@ export function AppButton({
 
 const styles = StyleSheet.create({
   base: {
-    paddingVertical: spacing.md,
+    paddingVertical: 15,
     paddingHorizontal: spacing.lg,
     borderRadius: radius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 48,
+    minHeight: 52,
   },
   outline: {
     borderWidth: 1,

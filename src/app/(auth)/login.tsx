@@ -2,13 +2,14 @@ import { Link } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { BrandLogo } from '@/components/brand-logo';
 import { AppButton } from '@/components/ui/button';
 import { Banner } from '@/components/ui/feedback';
 import { Screen } from '@/components/ui/screen';
 import { TextField } from '@/components/ui/text-field';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { clearAuthError, loginUser } from '@/store/slices/authSlice';
-import { fontSize, palette, spacing } from '@/theme/theme';
+import { fontSize, palette, radius, shadow, spacing } from '@/theme/theme';
 
 export default function LoginScreen() {
   const dispatch = useAppDispatch();
@@ -29,30 +30,38 @@ export default function LoginScreen() {
   };
 
   return (
-    <Screen scroll>
-      <View style={styles.header}>
-        <Text style={styles.brand}>BeOnEdge</Text>
-        <Text style={styles.subtitle}>Welcome back — sign in to continue</Text>
+    <Screen scroll center maxWidth={420}>
+      <View style={styles.logoWrap}>
+        <BrandLogo size={64} tagline="Smart SIP investing" />
       </View>
 
-      {error ? <Banner message={error} tone="error" /> : null}
+      <View style={styles.card}>
+        <Text style={styles.title}>Welcome back</Text>
+        <Text style={styles.subtitle}>Sign in to continue to your account</Text>
 
-      <TextField
-        label="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        placeholder="you@example.com"
-      />
-      <TextField
-        label="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        placeholder="Your password"
-      />
+        {error ? <Banner message={error} tone="error" /> : null}
 
-      <AppButton title="Login" onPress={onSubmit} loading={submitting} />
+        <View style={styles.form}>
+          <TextField
+            label="Email"
+            icon="✉"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            placeholder="you@example.com"
+          />
+          <TextField
+            label="Password"
+            icon="🔒"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholder="Your password"
+          />
+
+          <AppButton title="Login" onPress={onSubmit} loading={submitting} />
+        </View>
+      </View>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don&apos;t have an account? </Text>
@@ -65,19 +74,33 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: {
+  logoWrap: {
+    alignItems: 'center',
     marginBottom: spacing.xl,
-    marginTop: spacing.xl,
   },
-  brand: {
+  card: {
+    backgroundColor: palette.surfaceAlt,
+    borderWidth: 1,
+    borderColor: palette.border,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    ...shadow.card,
+  },
+  title: {
     color: palette.textPrimary,
-    fontSize: fontSize.xxl,
+    fontSize: fontSize.xl,
     fontWeight: '700',
+    textAlign: 'center',
   },
   subtitle: {
     color: palette.textSecondary,
     fontSize: fontSize.sm,
+    textAlign: 'center',
     marginTop: spacing.xs,
+    marginBottom: spacing.xl,
+  },
+  form: {
+    marginTop: spacing.sm,
   },
   footer: {
     flexDirection: 'row',
@@ -91,6 +114,6 @@ const styles = StyleSheet.create({
   link: {
     color: palette.indigo,
     fontSize: fontSize.sm,
-    fontWeight: '600',
+    fontWeight: '700',
   },
 });

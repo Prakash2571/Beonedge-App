@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 
 import { SipCard } from '@/components/sip-card';
+import { Container } from '@/components/ui/container';
 import { Banner, EmptyState, Loader } from '@/components/ui/feedback';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchCompletedSips } from '@/store/slices/sipSlice';
@@ -55,28 +56,32 @@ export default function CompletedScreen() {
             tintColor={palette.indigo}
           />
         }>
-        {completedError ? <Banner message={completedError} tone="error" /> : null}
+        <Container>
+          {completedError ? (
+            <Banner message={completedError} tone="error" />
+          ) : null}
 
-        {leaves.length === 0 ? (
-          <EmptyState
-            title="No completed SIPs"
-            subtitle="Matured and withdrawn SIPs will appear here."
-          />
-        ) : (
-          leaves.map((sip) => (
-            <SipCard
-              key={sip._id}
-              sip={sip}
-              headline="COMPLETED SIP"
-              onPress={() =>
-                router.push({
-                  pathname: '/sip/[sipId]',
-                  params: { sipId: sip._id },
-                })
-              }
+          {leaves.length === 0 ? (
+            <EmptyState
+              title="No completed SIPs"
+              subtitle="Matured and withdrawn SIPs will appear here."
             />
-          ))
-        )}
+          ) : (
+            leaves.map((sip) => (
+              <SipCard
+                key={sip._id}
+                sip={sip}
+                headline="COMPLETED SIP"
+                onPress={() =>
+                  router.push({
+                    pathname: '/sip/[sipId]',
+                    params: { sipId: sip._id },
+                  })
+                }
+              />
+            ))
+          )}
+        </Container>
       </ScrollView>
     </View>
   );

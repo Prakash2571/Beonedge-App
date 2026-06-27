@@ -5,11 +5,12 @@ import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native
 import { AddSipModal } from '@/components/add-sip-modal';
 import { SipCard } from '@/components/sip-card';
 import { AppButton } from '@/components/ui/button';
+import { Container } from '@/components/ui/container';
 import { Banner, EmptyState, Loader } from '@/components/ui/feedback';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { fetchSips } from '@/store/slices/sipSlice';
 import type { SipNature } from '@/types';
-import { fontSize, palette, spacing } from '@/theme/theme';
+import { fontSize, palette, radius, shadow, spacing } from '@/theme/theme';
 
 export default function HomeScreen() {
   const dispatch = useAppDispatch();
@@ -48,7 +49,8 @@ export default function HomeScreen() {
   if (user?.status === 'Pending') {
     return (
       <View style={styles.center}>
-        <Text style={styles.pendingTitle}>Thanks for signing up! 🎉</Text>
+        <Text style={styles.pendingEmoji}>⏳</Text>
+        <Text style={styles.pendingTitle}>Thanks for signing up!</Text>
         <Text style={styles.pendingText}>
           Your account is awaiting admin approval. You&apos;ll be able to create
           SIPs once you&apos;re approved.
@@ -62,6 +64,7 @@ export default function HomeScreen() {
   );
   const activeSips = visibleSips.filter((s) => s.status === 'Active');
   const pendingSips = visibleSips.filter((s) => s.status === 'Chosen');
+  const totalInvested = activeSips.reduce((sum, s) => sum + (s.totalPaid || 0), 0);
 
   const showInitialLoader = loading && items.length === 0 && !refreshing;
 
@@ -76,70 +79,99 @@ export default function HomeScreen() {
             tintColor={palette.indigo}
           />
         }>
-        <View style={styles.actions}>
-          <AppButton
-            title="+ Monthly SIP"
-            onPress={() => setModal({ visible: true, nature: 'monthly' })}
-            style={styles.actionBtn}
-          />
-          <AppButton
-            title="+ One-Time SIP"
-            variant="secondary"
-            onPress={() => setModal({ visible: true, nature: 'onetime' })}
-            style={styles.actionBtn}
-          />
-        </View>
+        <Container>
+          <Text style={styles.greeting}>
+            Hi, {user?.firstName || 'there'} 👋
+          </Text>
 
-        {feedback ? <Banner message={feedback} tone="success" /> : null}
-        {error ? <Banner message={error} tone="error" /> : null}
-
-        {showInitialLoader ? (
-          <Loader label="Loading your SIPs…" />
-        ) : (
-          <>
-            <Text style={styles.sectionTitle}>Active SIPs</Text>
-            {activeSips.length === 0 ? (
-              <Text style={styles.emptyLine}>No active SIPs yet.</Text>
-            ) : (
-              activeSips.map((sip) => (
-                <SipCard
-                  key={sip._id}
-                  sip={sip}
-                  headline="ACTIVE SIP"
-                  onPress={() =>
-                    router.push({
-                      pathname: '/sip/[sipId]',
-                      params: { sipId: sip._id },
-                    })
-                  }
-                />
-              ))
-            )}
-
-            {pendingSips.length > 0 ? (
-              <>
-                <Text style={[styles.sectionTitle, styles.pendingHeading]}>
-                  Awaiting Admin Approval
+          {/* Portfolio summary */}
+          <View style={styles.summary}>
+            <View>
+              <Text style={styles.summaryLabel}>Total Invested</Text>
+              <Text style={styles.summaryValue}>
+                ₹{totalInvested.toLocaleString('en-IN')}
+              </Text>
+            </View>
+            <View style={styles.summaryStats}>
+              <View style={styles.summaryStat}>
+                <Text style={styles.summaryStatNum}>{activeSips.length}</Text>
+                <Text style={styles.summaryStatLabel}>Active</Text>
+              </View>
+              <View style={styles.summaryDivider} />
+              <View style={styles.summaryStat}>
+                <Text style={[styles.summaryStatNum, { color: palette.yellow }]}>
+                  {pendingSips.length}
                 </Text>
-                {pendingSips.map((sip) => (
+                <Text style={styles.summaryStatLabel}>Pending</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.actions}>
+            <AppButton
+              title="+ Monthly SIP"
+              onPress={() => setModal({ visible: true, nature: 'monthly' })}
+              style={styles.actionBtn}
+            />
+            <AppButton
+              title="+ One-Time SIP"
+              variant="secondary"
+              onPress={() => setModal({ visible: true, nature: 'onetime' })}
+              style={styles.actionBtn}
+            />
+          </View>
+
+          {feedback ? <Banner message={feedback} tone="success" /> : null}
+          {error ? <Banner message={error} tone="error" /> : null}
+
+          {showInitialLoader ? (
+            <Loader label="Loading your SIPs…" />
+          ) : (
+            <>
+              <Text style={styles.sectionTitle}>Active SIPs</Text>
+              {activeSips.length === 0 ? (
+                <Text style={styles.emptyLine}>No active SIPs yet.</Text>
+              ) : (
+                activeSips.map((sip) => (
                   <SipCard
                     key={sip._id}
                     sip={sip}
-                    headline="PENDING APPROVAL"
-                    headlineColor={palette.yellow}
+                    headline="ACTIVE SIP"
+                    onPress={() =>
+                      router.push({
+                        pathname: '/sip/[sipId]',
+                        params: { sipId: sip._id },
+                      })
+                    }
                   />
-                ))}
-              </>
-            ) : null}
+                ))
+              )}
 
-            {activeSips.length === 0 && pendingSips.length === 0 ? (
-              <EmptyState
-                title="No SIPs yet"
-                subtitle="Tap a button above to start a monthly or one-time SIP."
-              />
-            ) : null}
-          </>
-        )}
+              {pendingSips.length > 0 ? (
+                <>
+                  <Text style={[styles.sectionTitle, styles.pendingHeading]}>
+                    Awaiting Admin Approval
+                  </Text>
+                  {pendingSips.map((sip) => (
+                    <SipCard
+                      key={sip._id}
+                      sip={sip}
+                      headline="PENDING APPROVAL"
+                      headlineColor={palette.yellow}
+                    />
+                  ))}
+                </>
+              ) : null}
+
+              {activeSips.length === 0 && pendingSips.length === 0 ? (
+                <EmptyState
+                  title="No SIPs yet"
+                  subtitle="Tap a button above to start a monthly or one-time SIP."
+                />
+              ) : null}
+            </>
+          )}
+        </Container>
       </ScrollView>
 
       <AddSipModal
@@ -161,6 +193,54 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     paddingBottom: spacing.xxl * 2,
   },
+  greeting: {
+    color: palette.textPrimary,
+    fontSize: fontSize.xl,
+    fontWeight: '700',
+    marginBottom: spacing.md,
+  },
+  summary: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: palette.indigoDark,
+    borderRadius: radius.lg,
+    padding: spacing.lg,
+    marginBottom: spacing.lg,
+    ...shadow.glow(palette.indigo),
+  },
+  summaryLabel: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: fontSize.sm,
+  },
+  summaryValue: {
+    color: palette.white,
+    fontSize: fontSize.xxl,
+    fontWeight: '800',
+    marginTop: spacing.xs,
+  },
+  summaryStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  summaryStat: {
+    alignItems: 'center',
+    paddingHorizontal: spacing.md,
+  },
+  summaryStatNum: {
+    color: palette.white,
+    fontSize: fontSize.lg,
+    fontWeight: '700',
+  },
+  summaryStatLabel: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: fontSize.xs,
+  },
+  summaryDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+  },
   actions: {
     flexDirection: 'row',
     gap: spacing.md,
@@ -172,7 +252,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     color: palette.textPrimary,
     fontSize: fontSize.lg,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: spacing.md,
   },
   pendingHeading: {
@@ -191,6 +271,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: spacing.xl,
   },
+  pendingEmoji: {
+    fontSize: 48,
+    marginBottom: spacing.md,
+  },
   pendingTitle: {
     color: palette.textPrimary,
     fontSize: fontSize.xl,
@@ -203,5 +287,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.md,
     textAlign: 'center',
     lineHeight: 22,
+    maxWidth: 360,
   },
 });

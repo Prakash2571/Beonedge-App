@@ -56,3 +56,21 @@ export const fontSize = {
   xl: 22,
   xxl: 28,
 } as const;
+
+/** Elevation / depth presets (cross-platform: iOS shadow* + Android elevation). */
+export const shadow = {
+  card: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.35,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  glow: (color: string) => ({
+    shadowColor: color,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    elevation: 8,
+  }),
+} as const;

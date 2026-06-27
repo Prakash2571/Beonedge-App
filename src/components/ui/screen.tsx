@@ -14,30 +14,47 @@ import { palette, spacing } from '@/theme/theme';
 interface ScreenProps {
   children: ReactNode;
   scroll?: boolean;
+  /** Vertically center the content (used for the auth screens). */
+  center?: boolean;
+  /** Caps content width so it doesn't stretch edge-to-edge on web / tablets. */
+  maxWidth?: number;
   contentStyle?: ViewStyle;
   edges?: ('top' | 'bottom' | 'left' | 'right')[];
 }
 
 /**
- * Standard page wrapper: brand background, safe-area handling and an optional
- * scroll + keyboard-avoiding container.
+ * Standard page wrapper: brand background, safe-area handling, optional scroll +
+ * keyboard avoidance, and a centered max-width column so wide screens (web /
+ * tablet) don't stretch the layout.
  */
 export function Screen({
   children,
   scroll = false,
+  center = false,
+  maxWidth = 560,
   contentStyle,
   edges = ['top', 'bottom'],
 }: ScreenProps) {
-  const inner = scroll ? (
+  const inner = (
+    <View style={[styles.inner, { maxWidth }, contentStyle]}>{children}</View>
+  );
+
+  const body = scroll ? (
     <ScrollView
       style={styles.flex}
-      contentContainerStyle={[styles.scrollContent, contentStyle]}
+      contentContainerStyle={[
+        styles.scrollContent,
+        center && styles.centerVertical,
+      ]}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
-      {children}
+      {inner}
     </ScrollView>
   ) : (
-    <View style={[styles.flex, styles.padded, contentStyle]}>{children}</View>
+    <View
+      style={[styles.flex, styles.padded, center && styles.centerVertical]}>
+      {inner}
+    </View>
   );
 
   return (
@@ -45,7 +62,7 @@ export function Screen({
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        {inner}
+        {body}
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -65,5 +82,13 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: spacing.lg,
     paddingBottom: spacing.xxl * 2,
+    flexGrow: 1,
+  },
+  centerVertical: {
+    justifyContent: 'center',
+  },
+  inner: {
+    width: '100%',
+    alignSelf: 'center',
   },
 });

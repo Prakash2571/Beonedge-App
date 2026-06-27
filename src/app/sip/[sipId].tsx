@@ -7,6 +7,7 @@ import { chooseAfterMatured, getSip } from '@/api/sip';
 import { Badge } from '@/components/ui/badge';
 import { AppButton } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Container } from '@/components/ui/container';
 import { Banner, EmptyState, Loader } from '@/components/ui/feedback';
 import { TextField } from '@/components/ui/text-field';
 import { useAppSelector } from '@/store/hooks';
@@ -132,7 +133,8 @@ export default function SipDetailScreen() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        {feedback ? <Banner message={feedback} tone="success" /> : null}
+        <Container style={styles.stack}>
+          {feedback ? <Banner message={feedback} tone="success" /> : null}
 
         {sip.process === 'Matured' ? (
           <Card style={styles.maturedCard}>
@@ -198,6 +200,7 @@ export default function SipDetailScreen() {
             }
           />
         ) : null}
+        </Container>
       </ScrollView>
 
       <Modal
@@ -296,6 +299,9 @@ const styles = StyleSheet.create({
   content: {
     padding: spacing.lg,
     paddingBottom: spacing.xxl * 2,
+    gap: spacing.lg,
+  },
+  stack: {
     gap: spacing.lg,
   },
   card: {

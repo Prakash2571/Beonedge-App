@@ -19,6 +19,8 @@ interface TextFieldProps {
   keyboardType?: KeyboardTypeOptions;
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   error?: string | null;
+  /** Optional leading glyph (emoji / unicode), e.g. "✉" or "🔒". */
+  icon?: string;
 }
 
 export function TextField({
@@ -30,13 +32,27 @@ export function TextField({
   keyboardType,
   autoCapitalize = 'none',
   error,
+  icon,
 }: TextFieldProps) {
   const [hidden, setHidden] = useState(secureTextEntry);
+  const [focused, setFocused] = useState(false);
+
+  const borderColor = error
+    ? palette.red
+    : focused
+      ? palette.indigo
+      : palette.border;
 
   return (
     <View style={styles.wrapper}>
       {label ? <Text style={styles.label}>{label}</Text> : null}
-      <View style={styles.inputRow}>
+      <View
+        style={[
+          styles.inputRow,
+          { borderColor },
+          focused && styles.focused,
+        ]}>
+        {icon ? <Text style={styles.icon}>{icon}</Text> : null}
         <TextInput
           style={styles.input}
           value={value}
@@ -47,6 +63,8 @@ export function TextField({
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           autoCorrect={false}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
         {secureTextEntry ? (
           <Pressable onPress={() => setHidden((h) => !h)} hitSlop={8}>
@@ -66,22 +84,30 @@ const styles = StyleSheet.create({
   label: {
     color: palette.textSecondary,
     fontSize: fontSize.sm,
-    marginBottom: spacing.xs,
+    marginBottom: spacing.sm,
+    fontWeight: '500',
   },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: palette.surface,
     borderWidth: 1,
-    borderColor: palette.border,
     borderRadius: radius.md,
     paddingHorizontal: spacing.md,
+  },
+  focused: {
+    backgroundColor: palette.surfaceAlt,
+  },
+  icon: {
+    fontSize: fontSize.md,
+    marginRight: spacing.sm,
+    color: palette.textSecondary,
   },
   input: {
     flex: 1,
     color: palette.textPrimary,
     fontSize: fontSize.md,
-    paddingVertical: spacing.md,
+    paddingVertical: 14,
   },
   toggle: {
     color: palette.indigo,
