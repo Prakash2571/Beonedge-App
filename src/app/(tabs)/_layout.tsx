@@ -1,14 +1,10 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
-import { Text } from 'react-native';
 
 import { Loader } from '@/components/ui/feedback';
 import { Screen } from '@/components/ui/screen';
 import { useAppSelector } from '@/store/hooks';
 import { palette } from '@/theme/theme';
-
-function TabIcon({ emoji, color }: { emoji: string; color: string }) {
-  return <Text style={{ fontSize: 18, color }}>{emoji}</Text>;
-}
 
 export default function TabsLayout() {
   const { status, bootstrapped } = useAppSelector((s) => s.auth);
@@ -43,21 +39,39 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: 'My SIPs',
-          tabBarIcon: ({ color }) => <TabIcon emoji="🏠" color={color} />,
+          tabBarIcon: ({ color, focused, size }) => (
+            <Ionicons
+              name={focused ? 'wallet' : 'wallet-outline'}
+              size={size ?? 22}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="completed"
         options={{
           title: 'Completed',
-          tabBarIcon: ({ color }) => <TabIcon emoji="✅" color={color} />,
+          tabBarIcon: ({ color, focused, size }) => (
+            <Ionicons
+              name={focused ? 'checkmark-done-circle' : 'checkmark-done-circle-outline'}
+              size={size ?? 22}
+              color={color}
+            />
+          ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
-          tabBarIcon: ({ color }) => <TabIcon emoji="👤" color={color} />,
+          tabBarIcon: ({ color, focused, size }) => (
+            <Ionicons
+              name={focused ? 'person' : 'person-outline'}
+              size={size ?? 22}
+              color={color}
+            />
+          ),
         }}
       />
     </Tabs>

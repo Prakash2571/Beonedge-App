@@ -1,8 +1,10 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import {
   ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
+  View,
   type StyleProp,
   type ViewStyle,
 } from 'react-native';
@@ -20,12 +22,12 @@ interface AppButtonProps {
   style?: StyleProp<ViewStyle>;
 }
 
-const backgrounds: Record<Variant, string> = {
-  primary: palette.indigo,
-  secondary: palette.pink,
-  danger: palette.red,
-  outline: 'transparent',
-  ghost: 'transparent',
+const gradients: Record<Variant, readonly [string, string]> = {
+  primary: ['#6366f1', '#8b5cf6'],
+  secondary: ['#ec4899', '#f472b6'],
+  danger: ['#ef4444', '#b91c1c'],
+  outline: ['transparent', 'transparent'],
+  ghost: ['transparent', 'transparent'],
 };
 
 const textColors: Record<Variant, string> = {
@@ -54,31 +56,44 @@ export function AppButton({
         ? palette.red
         : palette.indigo;
 
+  const content = loading ? (
+    <ActivityIndicator color={textColors[variant]} />
+  ) : (
+    <Text style={[styles.text, { color: textColors[variant] }]}>{title}</Text>
+  );
+
   return (
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
-        styles.base,
-        { backgroundColor: backgrounds[variant] },
-        variant === 'outline' && styles.outline,
+        styles.wrapper,
         isFilled && !isDisabled && shadow.glow(glowColor),
         pressed && !isDisabled && styles.pressed,
         isDisabled && styles.disabled,
         style,
       ]}>
-      {loading ? (
-        <ActivityIndicator color={textColors[variant]} />
+      {isFilled ? (
+        <LinearGradient
+          colors={gradients[variant]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.base}>
+          {content}
+        </LinearGradient>
       ) : (
-        <Text style={[styles.text, { color: textColors[variant] }]}>
-          {title}
-        </Text>
+        <View style={[styles.base, variant === 'outline' && styles.outline]}>
+          {content}
+        </View>
       )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    borderRadius: radius.md,
+  },
   base: {
     paddingVertical: 15,
     paddingHorizontal: spacing.lg,
@@ -92,7 +107,7 @@ const styles = StyleSheet.create({
     borderColor: palette.indigo,
   },
   pressed: {
-    opacity: 0.8,
+    opacity: 0.85,
   },
   disabled: {
     opacity: 0.5,

@@ -1,4 +1,5 @@
 import { useFocusEffect, useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useCallback, useState } from 'react';
 import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 
@@ -85,7 +86,11 @@ export default function HomeScreen() {
           </Text>
 
           {/* Portfolio summary */}
-          <View style={styles.summary}>
+          <LinearGradient
+            colors={['#4f46e5', '#7c3aed', '#db2777']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.summary}>
             <View>
               <Text style={styles.summaryLabel}>Total Invested</Text>
               <Text style={styles.summaryValue}>
@@ -105,7 +110,7 @@ export default function HomeScreen() {
                 <Text style={styles.summaryStatLabel}>Pending</Text>
               </View>
             </View>
-          </View>
+          </LinearGradient>
 
           <View style={styles.actions}>
             <AppButton

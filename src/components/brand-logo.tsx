@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View } from 'react-native';
 
 import { fontSize, palette, shadow } from '@/theme/theme';
@@ -8,22 +9,21 @@ interface BrandLogoProps {
   tagline?: string;
 }
 
-/** App logo mark ("B" tile) with optional wordmark + tagline. */
+/** App logo mark (gradient "B" tile) with optional wordmark + tagline. */
 export function BrandLogo({ size = 60, showName = true, tagline }: BrandLogoProps) {
   return (
     <View style={styles.wrap}>
-      <View
+      <LinearGradient
+        colors={['#6366f1', '#a855f7', '#ec4899']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={[
           styles.mark,
-          {
-            width: size,
-            height: size,
-            borderRadius: size * 0.3,
-          },
+          { width: size, height: size, borderRadius: size * 0.3 },
           shadow.glow(palette.indigo),
         ]}>
         <Text style={[styles.markText, { fontSize: size * 0.5 }]}>B</Text>
-      </View>
+      </LinearGradient>
       {showName ? <Text style={styles.name}>BeOnEdge</Text> : null}
       {tagline ? <Text style={styles.tagline}>{tagline}</Text> : null}
     </View>
@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   mark: {
-    backgroundColor: palette.indigo,
     alignItems: 'center',
     justifyContent: 'center',
   },
