@@ -76,3 +76,32 @@ export interface AfterMaturedPayload {
   amountPerMonth?: number;
   oneTimeAmount?: number;
 }
+
+
+/** A user object as populated on admin SIP listings. */
+export interface PopulatedUser {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email?: string;
+  phone?: string;
+}
+
+/** A SIP a user has chosen and is awaiting an admin payment (status "Chosen"). */
+export interface ChosenSip {
+  _id: string;
+  nature: SipNature;
+  totalMonths: number;
+  amountPerMonth?: number;
+  oneTimeAmount?: number;
+  userId: PopulatedUser;
+}
+
+/** A SIP whose user has requested a reinvest (process "Reinvest"). */
+export interface ReinvestSip {
+  _id: string;
+  totalPaid: number;
+  amountPerMonth?: number;
+  totalMonths: number;
+  userId: PopulatedUser;
+}

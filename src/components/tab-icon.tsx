@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-export type TabIconName = 'sips' | 'completed' | 'profile';
+export type TabIconName = 'sips' | 'completed' | 'profile' | 'reinvest' | 'users';
 
 /**
  * Lightweight, dependency-free tab icons drawn with plain Views, so the app
@@ -22,6 +22,31 @@ export function TabIcon({ name, color }: { name: TabIconName; color: string }) {
     return (
       <View style={[styles.circle, { borderColor: color }]}>
         <View style={[styles.check, { borderColor: color }]} />
+      </View>
+    );
+  }
+
+  if (name === 'reinvest') {
+    // Three-quarter circle suggesting a refresh / cycle.
+    return (
+      <View
+        style={[
+          styles.circle,
+          { borderColor: color, borderTopColor: 'transparent' },
+        ]}
+      />
+    );
+  }
+
+  if (name === 'users') {
+    // Two heads over a shared body (a group).
+    return (
+      <View style={styles.users}>
+        <View style={styles.usersHeads}>
+          <View style={[styles.smallHead, { backgroundColor: color }]} />
+          <View style={[styles.smallHead, { backgroundColor: color }]} />
+        </View>
+        <View style={[styles.groupBody, { backgroundColor: color }]} />
       </View>
     );
   }
@@ -79,6 +104,28 @@ const styles = StyleSheet.create({
   },
   body: {
     width: 16,
+    height: 8,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    marginTop: 2,
+  },
+  users: {
+    width: 26,
+    height: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  usersHeads: {
+    flexDirection: 'row',
+    gap: 3,
+  },
+  smallHead: {
+    width: 7,
+    height: 7,
+    borderRadius: 4,
+  },
+  groupBody: {
+    width: 20,
     height: 8,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,

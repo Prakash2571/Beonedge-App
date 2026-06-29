@@ -48,10 +48,24 @@ export default function AdminLayout() {
         }}
       />
       <Tabs.Screen
+        name="payments"
+        options={{
+          title: 'Payments',
+          tabBarIcon: ({ color }) => <TabIcon name="sips" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="reinvest"
+        options={{
+          title: 'Reinvest',
+          tabBarIcon: ({ color }) => <TabIcon name="reinvest" color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="users"
         options={{
           title: 'Users',
-          tabBarIcon: ({ color }) => <TabIcon name="sips" color={color} />,
+          tabBarIcon: ({ color }) => <TabIcon name="users" color={color} />,
         }}
       />
       <Tabs.Screen
