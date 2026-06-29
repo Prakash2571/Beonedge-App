@@ -18,6 +18,22 @@ export async function login(email: string, password: string): Promise<User> {
   return data.user;
 }
 
+export async function adminLogin(
+  email: string,
+  password: string,
+  code: string
+): Promise<User> {
+  const { data } = await api.post<LoginResponse>('/adminlogin', {
+    email,
+    password,
+    code,
+  });
+  if (data.token) {
+    await setToken(data.token);
+  }
+  return data.user;
+}
+
 export async function signup(payload: SignupPayload): Promise<User> {
   // The backend creates the account then we immediately log in to get a token.
   await api.post('/usersignup', payload);

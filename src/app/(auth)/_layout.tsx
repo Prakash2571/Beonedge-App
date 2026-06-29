@@ -5,7 +5,7 @@ import { Screen } from '@/components/ui/screen';
 import { useAppSelector } from '@/store/hooks';
 
 export default function AuthLayout() {
-  const { status, bootstrapped } = useAppSelector((s) => s.auth);
+  const { status, bootstrapped, user } = useAppSelector((s) => s.auth);
 
   if (!bootstrapped) {
     return (
@@ -15,9 +15,9 @@ export default function AuthLayout() {
     );
   }
 
-  // Already signed in? Send them to the app.
+  // Already signed in? Send them to the right home for their role.
   if (status === 'authenticated') {
-    return <Redirect href="/" />;
+    return <Redirect href={user?.role === 'Admin' ? '/approvals' : '/'} />;
   }
 
   return <Stack screenOptions={{ headerShown: false }} />;

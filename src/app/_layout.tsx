@@ -26,6 +26,7 @@ function RootNavigator() {
       }}>
       <Stack.Screen name="(auth)" />
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="(admin)" />
       <Stack.Screen
         name="sip/[sipId]"
         options={{

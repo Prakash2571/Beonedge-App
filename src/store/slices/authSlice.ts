@@ -54,6 +54,18 @@ export const loginUser = createAsyncThunk<
   }
 });
 
+export const loginAdmin = createAsyncThunk<
+  User,
+  { email: string; password: string; code: string },
+  { rejectValue: string }
+>('auth/loginAdmin', async ({ email, password, code }, { rejectWithValue }) => {
+  try {
+    return await authApi.adminLogin(email, password, code);
+  } catch (err) {
+    return rejectWithValue(extractErrorMessage(err, 'Admin login failed'));
+  }
+});
+
 export const signupUser = createAsyncThunk<
   User,
   SignupPayload,
@@ -111,6 +123,21 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.submitting = false;
         state.error = action.payload ?? 'Login failed';
+      });
+
+    builder
+      .addCase(loginAdmin.pending, (state) => {
+        state.submitting = true;
+        state.error = null;
+      })
+      .addCase(loginAdmin.fulfilled, (state, action) => {
+        state.submitting = false;
+        state.user = action.payload;
+        state.status = 'authenticated';
+      })
+      .addCase(loginAdmin.rejected, (state, action) => {
+        state.submitting = false;
+        state.error = action.payload ?? 'Admin login failed';
       });
 
     builder

@@ -6,7 +6,7 @@ import { Screen } from '@/components/ui/screen';
 import { useAppSelector } from '@/store/hooks';
 import { palette } from '@/theme/theme';
 
-export default function TabsLayout() {
+export default function AdminLayout() {
   const { status, bootstrapped, user } = useAppSelector((s) => s.auth);
 
   if (!bootstrapped) {
@@ -21,9 +21,9 @@ export default function TabsLayout() {
     return <Redirect href="/login" />;
   }
 
-  // Admins use the admin area, not the user tabs.
-  if (user?.role === 'Admin') {
-    return <Redirect href="/approvals" />;
+  // Only admins belong here; everyone else goes to the user app.
+  if (user?.role !== 'Admin') {
+    return <Redirect href="/" />;
   }
 
   return (
@@ -41,23 +41,23 @@ export default function TabsLayout() {
         tabBarInactiveTintColor: palette.textMuted,
       }}>
       <Tabs.Screen
-        name="index"
+        name="approvals"
         options={{
-          title: 'My SIPs',
-          tabBarIcon: ({ color }) => <TabIcon name="sips" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="completed"
-        options={{
-          title: 'Completed',
+          title: 'Approvals',
           tabBarIcon: ({ color }) => <TabIcon name="completed" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="profile"
+        name="users"
         options={{
-          title: 'Profile',
+          title: 'Users',
+          tabBarIcon: ({ color }) => <TabIcon name="sips" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: 'Account',
           tabBarIcon: ({ color }) => <TabIcon name="profile" color={color} />,
         }}
       />
