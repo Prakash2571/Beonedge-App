@@ -9,7 +9,6 @@
     "axios": "^1.12.2",
     "react-redux": "^9.2.0",
     "expo": "~56.0.12",
-    "expo-build-properties": "~56.0.4",
     "expo-constants": "~56.0.18",
     "expo-device": "~56.0.4",
     "expo-font": "~56.0.7",
